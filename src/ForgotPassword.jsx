@@ -10,7 +10,7 @@ const ForgotPassword = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post('https://password-reset-backend-bjic.onrender.com/api/auth/forgot-password', { email });
+      const res = await axios.post('https://password-reset-backend-bjic.onrender.com/api/auth/forgot-password', { email },{ timeout: 5000 });
       alert(res.data.message);
     } catch (err) {
       alert(err.response?.data?.message || "Something went wrong"); 
