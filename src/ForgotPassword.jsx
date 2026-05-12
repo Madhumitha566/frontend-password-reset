@@ -32,7 +32,7 @@ const ForgotPassword = () => {
   const token = localStorage.getItem('token');
   
   try {
-    // 1. Send the forgot-password request
+    // 1. Send the forgot-password request to Render backend
     const res = await axios.post(
       'https://password-reset-backend-bjic.onrender.com/api/auth/forgot-password', 
       { email }, 
@@ -46,14 +46,14 @@ const ForgotPassword = () => {
 
     alert(res.data.message);
 
-    // 2. Trigger the notification email using the new { to, subject, html } payload structure
+    // 2. Trigger the notification email using your deployed Render backend router
     try {
       await axios.post(
-        'https://your-backend-domain.com/api/send-login-email', // Replace with your actual backend domain
+        'https://password-reset-backend-bjic.onrender.com/api/send-login-email', 
         {
-          to: email,                                           // Matches your updated function parameter
-          subject: "Password Reset Notification",              // Custom subject line
-          html: "<html><body><p>Hello, a password reset was successfully requested for this account.</p></body></html>" // Custom HTML body
+          to: email,                                           
+          subject: "Password Reset Notification",              
+          html: "<html><body><p>Hello, a password reset was successfully requested for this account.</p></body></html>" 
         }, 
         {
           headers: {
@@ -64,7 +64,7 @@ const ForgotPassword = () => {
       );
       console.log('Notification email triggered successfully');
     } catch (mailErr) {
-      // Silently log email errors so it doesn't block the UI or break the user experience
+      // Silently log email errors so it doesn't break the user experience if Brevo acts up
       console.error('Failed to trigger notification email:', mailErr.response?.data?.error || mailErr.message);
     }
 
@@ -74,7 +74,6 @@ const ForgotPassword = () => {
     setLoading(false);
   }
 };
-
   return (
 
     <div className="container d-flex justify-content-center align-items-center min-vh-100">
