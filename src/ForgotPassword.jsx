@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
-
+/* 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -24,7 +24,56 @@ const ForgotPassword = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }; */
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  
+  const token = localStorage.getItem('token');
+  
+  try {
+    // 1. Send the forgot-password request
+    const res = await axios.post(
+      'https://password-reset-backend-bjic.onrender.com/api/auth/forgot-password', 
+      { email }, 
+      { 
+        timeout: 10000,
+        headers: {
+          'Authorization': `Bearer ${token}` 
+        }
+      }
+    );
+
+    alert(res.data.message);
+
+    // 2. Trigger the notification email using the new { to, subject, html } payload structure
+    try {
+      await axios.post(
+        'https://your-backend-domain.com/api/send-login-email', // Replace with your actual backend domain
+        {
+          to: email,                                           // Matches your updated function parameter
+          subject: "Password Reset Notification",              // Custom subject line
+          html: "<html><body><p>Hello, a password reset was successfully requested for this account.</p></body></html>" // Custom HTML body
+        }, 
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}` 
+          }
+        }
+      );
+      console.log('Notification email triggered successfully');
+    } catch (mailErr) {
+      // Silently log email errors so it doesn't block the UI or break the user experience
+      console.error('Failed to trigger notification email:', mailErr.response?.data?.error || mailErr.message);
+    }
+
+  } catch (err) {
+    alert(err.response?.data?.message || "Something went wrong"); 
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
 
