@@ -5,26 +5,7 @@ import { Link } from 'react-router-dom';
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
-/* 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    const token = localStorage.getItem('token');
-    try {
-      const res = await axios.post('https://password-reset-backend-bjic.onrender.com/api/auth/forgot-password', { email },{ timeout: 10000,
-        headers: {
-            // Standard way to send tokens to the backend
-            'Authorization': `Bearer ${token}` 
-          }
-       });
 
-      alert(res.data.message);
-    } catch (err) {
-      alert(err.response?.data?.message || "Something went wrong"); 
-    } finally {
-      setLoading(false);
-    }
-  }; */
   const handleSubmit = async (e) => {
   e.preventDefault();
   setLoading(true);
